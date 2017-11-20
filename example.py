@@ -1,5 +1,6 @@
-import pandas as pd
 import linearsolve as ls
+import numpy as np
+import pandas as pd
 
 
 # 1. Supplied by user
@@ -23,23 +24,23 @@ parameters['A'] = 1
 
 # Funtion that evaluates the equilibrium conditions
 def equilibrium_equations(variables_forward,variables_current,parameters):
-    
-    # Parameters 
+
+    # Parameters
     p = parameters
-    
+
     # Variables
     fwd = variables_forward
     cur = variables_current
-    
+
     # Household Euler equation
     euler_eqn = p.beta*fwd.c**-p.sigma*(p.alpha*cur.a*fwd.k**(p.alpha-1)+1-p.delta) - cur.c**-p.sigma
-    
+
     # Goods market clearing
     market_clearing = cur.c + fwd.k - (1-p.delta)*cur.k - cur.a*cur.k**p.alpha
-        
+
     # Exogenous technology
     technology_proc = p.rhoa*np.log(cur.a) - np.log(fwd.a)
-    
+
     # Stack equilibrium conditions into a numpy array
     return np.array([
             euler_eqn,
