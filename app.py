@@ -1,7 +1,7 @@
 from hashlib import sha256
 from collections import OrderedDict
 
-from flask import Flask, abort, jsonify, request
+from flask import Flask, abort, jsonify, request, render_template
 from flask_cors import CORS
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.contrib.cache import SimpleCache
@@ -41,6 +41,11 @@ def first_example():
         cache.set(cache_key, result, timeout=3600)  # 1 hour
 
     return jsonify(result)
+
+
+@app.route('/')
+def main():
+    return render_template('index.html')
 
 
 @app.after_request
