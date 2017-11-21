@@ -1,0 +1,9 @@
+version: '3.1'
+services:
+  web:
+    build:
+      context: .
+    volumes:
+      - ./:/app
+    ports:
+      - "5000:5000"

@@ -5,8 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 
+CMD ["./run.sh"]
 WORKDIR /app
-CMD ["python", "example.py"]
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends build-essential tk-dev && \
