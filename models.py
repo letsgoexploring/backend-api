@@ -38,8 +38,7 @@ def equilibrium_equations(variables_forward, variables_current, parameters):
     ])
 
 
-# TODO better name for this
-def get_equilibrium_values(parameters):
+def basic_rbc_simulation(parameters):
     # Initialize the model
     parameters = pd.Series(parameters)
     model = ls.model(equations=equilibrium_equations,
