@@ -4,12 +4,12 @@ import pandas as pd
 
 
 # 1. Supplied by user
-# alpha  = .35
-# beta  = 0.99
-# delta   = 0.025
-# rhoa = .9
-# sigma = 1.5
-# A = 1
+# alpha=0.35
+# beta=0.99
+# delta=0.025
+# rhoa=0.9
+# sigma=1.5
+# A=1
 
 
 # Funtion that evaluates the equilibrium conditions

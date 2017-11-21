@@ -1,29 +1,54 @@
+from hashlib import sha256
+from collections import OrderedDict
+
 from flask import Flask, abort, jsonify, request
+from flask_cors import CORS
 from werkzeug.contrib.fixers import ProxyFix
-# from werkzeug.contrib.cache import SimpleCache
+from werkzeug.contrib.cache import SimpleCache
 
 from models import get_equilibrium_values
 
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
+CORS(app, resources=r'/api/*')
 
-# TODO add caching
-# cache = SimpleCache()
+cache = SimpleCache()
+
+
+def get_cache_key(data):
+    values = ['{}:{}'.format(k, v) for k, v in data.items()]
+    return sha256(','.join(values).encode('utf-8')).hexdigest()
 
 
 # TODO better URL
-@app.route('/api/first-example/', methods=['POST'])
+@app.route('/api/first-example/')
 def first_example():
-    data = request.get_json()
-    if not data:
-        abort(400)
-
-    # require all the keys
     keys = ['alpha', 'beta', 'delta', 'rhoa', 'sigma', 'A']
+    # ordered so that the cache key is consistent
+    data = OrderedDict()
+    # require all the keys
     for k in keys:
-        if k not in data:
+        value = request.args.get(k)
+        if value is None:
             abort(400)
-        data[k] = float(data[k])
+        data[k] = float(value)
 
-    return jsonify(get_equilibrium_values(data))
+    cache_key = get_cache_key(data)
+    result = cache.get(cache_key)
+    if result is None:
+        result = get_equilibrium_values(data)
+        cache.set(cache_key, result, timeout=3600)  # 1 hour
+
+    return jsonify(result)
+
+
+@app.after_request
+def add_header(response):
+    response.cache_control.max_age = 3600
+    response.cache_control.public = True
+    return response
+
+
+if __name__ == '__main__':
+    app.run()
