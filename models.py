@@ -58,6 +58,7 @@ def equilibrium_equations(variables_forward, variables_current, parameters):
 
 
 def centralized_rbc_with_labor_simulation(parameters):
+    periods = parameters.pop('periods')
     # Initialize the model
     parameters = pd.Series(parameters)
     model = ls.model(equations=equilibrium_equations,
@@ -70,7 +71,7 @@ def centralized_rbc_with_labor_simulation(parameters):
     guess = [1, 2, 1, 1, 1, 0.3]
     model.compute_ss(guess)
     model.approximate_and_solve()
-    model.impulse(T=parameters['periods'], t0=5, shock=[parameters['sige'], 0])
+    model.impulse(T=periods, t0=5, shock=[parameters['sige'], 0])
 
     return {
         't': model.irs['eA']['eA'].index.tolist(),
