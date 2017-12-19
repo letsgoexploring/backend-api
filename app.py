@@ -6,7 +6,7 @@ from flask_cors import CORS
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.contrib.cache import SimpleCache
 
-from models import basic_rbc_simulation
+from models import centralized_rbc_with_labor_simulation
 
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ def get_cache_key(data):
 
 @app.route('/api/v1/basic-rbc-simulation/')
 def first_example():
-    keys = ['alpha', 'beta', 'delta', 'rhoa', 'sigma', 'A']
+    keys = ['alpha', 'beta', 'delta', 'eta', 'phi', 'rhoa', 'sigma', 'sige', 'A']
     # ordered so that the cache key is consistent
     data = OrderedDict()
     # require all the keys
@@ -36,7 +36,7 @@ def first_example():
     cache_key = get_cache_key(data)
     result = cache.get(cache_key)
     if result is None:
-        result = basic_rbc_simulation(data)
+        result = centralized_rbc_with_labor_simulation(data)
         cache.set(cache_key, result, timeout=3600)  # 1 hour
 
     return jsonify(result)
