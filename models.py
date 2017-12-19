@@ -25,22 +25,26 @@ def equilibrium_equations(variables_forward, variables_current, parameters):
     cur = variables_current
 
     # Household Euler equation
-    euler_eqn = p.beta*fwd.c**-p.sigma*(p.alpha*fwd.a*fwd.k**(p.alpha-1)*fwd.l**(1-p.alpha)+1-p.delta) - cur.c**-p.sigma
+    euler_eqn = (p.beta * fwd.c ** -p.sigma *
+                 (p.alpha * fwd.a * fwd.k ** (p.alpha - 1) *
+                  fwd.l ** (1 - p.alpha) + 1 - p.delta) -
+                 cur.c ** -p.sigma)
 
     # Labor supply
-    labor_supply = (1-p.alpha)*cur.c**-p.sigma *cur.a*cur.k**p.alpha *cur.l**-p.alpha - p.phi*(1-cur.l)**-p.eta
-    
+    labor_supply = ((1 - p.alpha) * cur.c ** -p.sigma * cur.a * cur.k ** p.alpha *
+                    cur.l ** -p.alpha - p.phi * (1 - cur.l) ** -p.eta)
+
     # Goods market clearing
     market_clearing = cur.c + cur.i - cur.y
-    
+
     # Production function
-    production_fun = cur.a*cur.k**p.alpha*cur.l**(1-p.alpha) - cur.y
-    
+    production_fun = cur.a * cur.k ** p.alpha * cur.l ** (1 - p.alpha) - cur.y
+
     # Capital evolution
     capital_evolution = fwd.k - (1-p.delta)*cur.k - cur.i
 
     # Exogenous technology
-    technology_proc = p.rhoa*np.log(cur.a) - np.log(fwd.a)
+    technology_proc = p.rhoa * np.log(cur.a) - np.log(fwd.a)
 
     # Stack equilibrium conditions into a numpy array
     return np.array([
@@ -66,7 +70,7 @@ def centralized_rbc_with_labor_simulation(parameters):
     guess = [1, 2, 1, 1, 1, 0.3]
     model.compute_ss(guess)
     model.approximate_and_solve()
-    model.impulse(T=41, t0=5, shock=[parameters['sige'],0])
+    model.impulse(T=41, t0=5, shock=[parameters['sige'], 0])
 
     return {
         't': model.irs['eA']['eA'].index.tolist(),
@@ -77,3 +81,4 @@ def centralized_rbc_with_labor_simulation(parameters):
         'i': model.irs['eA']['i'].tolist(),
         'y': model.irs['eA']['y'].tolist(),
         'l': model.irs['eA']['l'].tolist(),
+    }
