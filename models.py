@@ -13,7 +13,7 @@ import pandas as pd
 # phi = 1.5
 # rho = 0.9
 # sige = 0.01
-# parameters = 41
+# periods = 41
 
 # Function that evaluates the equilibrium conditions
 def equilibrium_equations(variables_forward, variables_current, parameters):

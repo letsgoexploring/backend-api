@@ -23,7 +23,8 @@ def get_cache_key(data):
 
 @app.route('/api/v1/basic-rbc-simulation/')
 def first_example():
-    keys = ['alpha', 'beta', 'delta', 'eta', 'phi', 'rhoa', 'sigma', 'sige', 'A']
+    keys = ['alpha', 'beta', 'delta', 'eta', 'phi',
+            'rhoa', 'sigma', 'sige', 'A', 'periods']
     # ordered so that the cache key is consistent
     data = OrderedDict()
     # require all the keys
