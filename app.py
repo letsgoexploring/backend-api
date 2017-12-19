@@ -32,7 +32,12 @@ def centralized_rbc_with_labor_simulation():
         value = request.args.get(k)
         if value is None:
             abort(400)
-        data[k] = float(value)
+        if k == 'periods':
+            cast = int
+        else:
+            cast = float
+
+        data[k] = cast(value)
 
     cache_key = get_cache_key(data)
     result = cache.get(cache_key)
