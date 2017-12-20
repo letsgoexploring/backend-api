@@ -23,7 +23,7 @@ def get_cache_key(data):
 
 @app.route('/api/v1/centralized-rbc-with-labor-simulation/')
 def centralized_rbc_with_labor_simulation():
-    keys = ['alpha', 'beta', 'delta', 'eta', 'phi',
+    keys = ['alpha', 'beta', 'delta', 'eta', 'phi', 'stochSim',
             'rhoa', 'sigma', 'sige', 'A', 'periods']
     # ordered so that the cache key is consistent
     data = OrderedDict()
@@ -31,8 +31,9 @@ def centralized_rbc_with_labor_simulation():
     for k in keys:
         value = request.args.get(k)
         if value is None:
+            print('param {} is missing'.format(k))
             abort(400)
-        if k == 'periods':
+        if k in ['periods', 'stochSim']:
             cast = int
         else:
             cast = float

@@ -73,10 +73,11 @@ def centralized_rbc_with_labor_simulation(parameters):
     guess = [1, 2, 1, 1, 1, 0.3]
     model.compute_ss(guess)
     model.approximate_and_solve()
-    
+
     if parameters.stochSim:
-        
-        model.stoch_sim(T=periods+1,dropFirst=100,covMat=np.array([[parameters['sige']**2,0],[0,0]]),seed=0,percent=False)
+        model.stoch_sim(T=periods + 1, dropFirst=100,
+                        covMat=np.array([[parameters['sige'] ** 2, 0], [0, 0]]),
+                        seed=0, percent=False)
 
         return {
             't': model.simulated['eA'].index.tolist(),
@@ -90,8 +91,8 @@ def centralized_rbc_with_labor_simulation(parameters):
         }
 
     else:
-        model.impulse(T=periods+1, t0=1, shock=[parameters['sige'], 0])
-        
+        model.impulse(T=periods + 1, t0=1, shock=[parameters['sige'], 0])
+
         return {
             't': model.irs['eA']['eA'].index.tolist(),
             'e': model.irs['eA']['eA'].tolist(),
