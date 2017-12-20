@@ -11,9 +11,10 @@ import pandas as pd
 # sigma = 1
 # eta = 1
 # phi = 1.5
-# rho = 0.9
+# rhoa = 0.9
 # sige = 0.01
-# periods = 41
+# periods = 25
+# stochSim = True
 
 # Function that evaluates the equilibrium conditions
 def equilibrium_equations(variables_forward, variables_current, parameters):
@@ -58,9 +59,10 @@ def equilibrium_equations(variables_forward, variables_current, parameters):
 
 
 def centralized_rbc_with_labor_simulation(parameters):
-    periods = parameters.pop('periods')
+
     # Initialize the model
     parameters = pd.Series(parameters)
+    periods = int(parameters.periods)
     model = ls.model(equations=equilibrium_equations,
                      nstates=2,
                      varNames=['a', 'k', 'c', 'i', 'y', 'l'],
@@ -71,15 +73,32 @@ def centralized_rbc_with_labor_simulation(parameters):
     guess = [1, 2, 1, 1, 1, 0.3]
     model.compute_ss(guess)
     model.approximate_and_solve()
-    model.impulse(T=periods, t0=5, shock=[parameters['sige'], 0])
+    
+    if parameters.stochSim:
+        
+        model.stoch_sim(T=periods+1,dropFirst=100,covMat=np.array([[parameters['sige']**2,0],[0,0]]),seed=0,percent=False)
 
-    return {
-        't': model.irs['eA']['eA'].index.tolist(),
-        'e': model.irs['eA']['eA'].tolist(),
-        'a': model.irs['eA']['a'].tolist(),
-        'k': model.irs['eA']['k'].tolist(),
-        'c': model.irs['eA']['c'].tolist(),
-        'i': model.irs['eA']['i'].tolist(),
-        'y': model.irs['eA']['y'].tolist(),
-        'l': model.irs['eA']['l'].tolist(),
-    }
+        return {
+            't': model.simulated['eA'].index.tolist(),
+            'e': model.simulated['eA'].tolist(),
+            'a': model.simulated['a'].tolist(),
+            'k': model.simulated['k'].tolist(),
+            'c': model.simulated['c'].tolist(),
+            'i': model.simulated['i'].tolist(),
+            'y': model.simulated['y'].tolist(),
+            'l': model.simulated['l'].tolist(),
+        }
+
+    else:
+        model.impulse(T=periods+1, t0=1, shock=[parameters['sige'], 0])
+        
+        return {
+            't': model.irs['eA']['eA'].index.tolist(),
+            'e': model.irs['eA']['eA'].tolist(),
+            'a': model.irs['eA']['a'].tolist(),
+            'k': model.irs['eA']['k'].tolist(),
+            'c': model.irs['eA']['c'].tolist(),
+            'i': model.irs['eA']['i'].tolist(),
+            'y': model.irs['eA']['y'].tolist(),
+            'l': model.irs['eA']['l'].tolist(),
+        }
