@@ -77,7 +77,7 @@ def centralized_rbc_with_labor_simulation(parameters):
     if parameters.stochSim:
         model.stoch_sim(T=periods + 1, dropFirst=100,
                         covMat=np.array([[parameters['sige'] ** 2, 0], [0, 0]]),
-                        seed=0, percent=False)
+                        percent=False)
 
         return {
             't': model.simulated['eA'].index.tolist(),
