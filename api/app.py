@@ -6,7 +6,7 @@ from flask_cors import CORS
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.contrib.cache import SimpleCache
 
-import models
+from api.models import centralized_rbc
 
 
 app = Flask(__name__)
@@ -43,7 +43,7 @@ def centralized_rbc_with_labor_simulation():
     cache_key = get_cache_key(data)
     result = cache.get(cache_key)
     if result is None:
-        result = models.centralized_rbc_with_labor_simulation(data)
+        result = centralized_rbc.centralized_rbc_with_labor_simulation(data)
         cache.set(cache_key, result, timeout=3600)  # 1 hour
 
     return jsonify(result)
