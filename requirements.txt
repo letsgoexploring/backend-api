@@ -62,7 +62,7 @@ Jinja2==2.10.1 \
     --hash=sha256:f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4
 itsdangerous==0.24 \
     --hash=sha256:cbb3fcf8d3e33df861709ecaf89d9e6629cff0a217bc2848f1b41cd30d360519
-Flask==0.12.2 \
+Flask==0.12.3 \
     --hash=sha256:0749df235e3ff61ac108f69ac178c9770caeaccad2509cb762ce1f65570a8856 \
     --hash=sha256:49f44461237b69ecd901cc7ce66feea0319b9158743dd27a2899962ab214dac1
 gunicorn==19.7.1 \
